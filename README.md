@@ -6,7 +6,7 @@
 
    ```bash
    git clone https://github.com/gwardziak/star-wars-catalogue.git
-   cd ./"Star Wars Characters Catalogue"
+   cd ./"star-wars-catalogue"
    npm install
    ```
 

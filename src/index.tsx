@@ -1,6 +1,9 @@
-import React from "react";
+import React, { createContext } from "react";
 import ReactDOM from "react-dom";
 import App from "./App";
+import { RootStore } from "./stores/RootStore";
+
+export const StoreContext = createContext<RootStore>(new RootStore());
 
 ReactDOM.render(
   <React.StrictMode>
