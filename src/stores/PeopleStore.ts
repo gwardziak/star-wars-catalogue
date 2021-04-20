@@ -1,4 +1,10 @@
-import { action, makeObservable, observable, runInAction } from "mobx";
+import {
+  action,
+  computed,
+  makeObservable,
+  observable,
+  runInAction,
+} from "mobx";
 import { RootStore } from "./RootStore";
 
 export type Person = {
@@ -29,6 +35,8 @@ export class PeopleStore {
     hasMore: "https://swapi.dev/api/people/?take=10&page=1",
   });
 
+  @observable filter: string = "";
+
   constructor(private readonly rootStore: RootStore) {
     makeObservable(this);
   }
@@ -39,6 +47,28 @@ export class PeopleStore {
     const episodeNb = parseInt(splits[5]);
 
     return titles[episodeNb - 1];
+  }
+
+  @computed get filterByName() {
+    const filterResult = this.peopleInfo.people.filter((person) =>
+      person.name.toLowerCase().includes(this.filter.toLowerCase())
+    );
+
+    filterResult.sort(function (a, b) {
+      if (a.name < b.name) {
+        return -1;
+      }
+      if (a.name > b.name) {
+        return 1;
+      }
+      return 0;
+    });
+
+    return filterResult;
+  }
+
+  @action setFilter(input: string): void {
+    this.filter = input;
   }
 
   @action async fetchPeople(): Promise<void> {
