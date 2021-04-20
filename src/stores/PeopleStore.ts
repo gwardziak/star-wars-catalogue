@@ -55,9 +55,12 @@ export class PeopleStore {
         const res = await query.json();
         return runInAction(() => {
           for (const person of res.results) {
+            const resolvedFilms = [];
             for (let film of person.films) {
-              film = this.resolveFilmTitle(film);
+              resolvedFilms.push(this.resolveFilmTitle(film));
             }
+
+            person.films = resolvedFilms;
           }
 
           this.peopleInfo.hasMore = res.next;

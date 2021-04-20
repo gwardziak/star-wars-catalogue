@@ -44,6 +44,8 @@ const App = observer(() => {
             name={person.name}
             birthYear={person.birth_year}
             gender={person.gender}
+            films={person.films}
+            height={person.height}
           />
         ))}
       </ul>

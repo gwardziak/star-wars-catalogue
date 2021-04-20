@@ -1,12 +1,22 @@
-import React from "react";
+import { useState } from "react";
 
 type CharacterProps = {
   name: string;
   gender: string;
   birthYear: string;
+  height: string;
+  films: string[];
 };
 
-export const Character = ({ name, gender, birthYear }: CharacterProps) => {
+export const Character = ({
+  name,
+  gender,
+  birthYear,
+  height,
+  films,
+}: CharacterProps) => {
+  const [isToggle, setIsToggle] = useState<boolean>(false);
+
   return (
     <>
       <li x-for="item in items">
@@ -26,16 +36,44 @@ export const Character = ({ name, gender, birthYear }: CharacterProps) => {
             </div>
             <div>
               <dt className="sr-only">Birth year</dt>
-              <dd className="group-hover:text-light-blue-200 text-sm font-medium mb-4">
+              <dd className="group-hover:text-light-blue-200 text-sm font-medium ">
                 {`Birth year: ${birthYear}`}
               </dd>
             </div>
-            <div>
-              <dt className="sr-only">Show more</dt>
-              <dd className="group-hover:text-light-blue-200 text-sm font-medium">
-                {"Show more..."}
-              </dd>
-            </div>
+            {isToggle ? (
+              <>
+                <div>
+                  <dt className="sr-only">Height</dt>
+                  <dd className="group-hover:text-light-blue-200 text-sm font-medium">
+                    {`Height: ${height}`}
+                  </dd>
+                </div>
+                <div>
+                  <dt className="sr-only">Show more</dt>
+                  <dd className="group-hover:text-light-blue-200 text-sm font-medium ">
+                    {`Played in films`}
+                    <ul className="list-disc list-inside">
+                      {films.map((film) => (
+                        <li>{film}</li>
+                      ))}
+                    </ul>
+                  </dd>
+                </div>
+                <div onClick={() => setIsToggle(false)}>
+                  <dt className="sr-only">Hide</dt>
+                  <dd className="group-hover:text-light-blue-200 text-sm font-medium mt-4">
+                    {"Hide"}
+                  </dd>
+                </div>
+              </>
+            ) : (
+              <div onClick={() => setIsToggle(true)}>
+                <dt className="sr-only">Show more</dt>
+                <dd className="group-hover:text-light-blue-200 text-sm font-medium mt-4">
+                  {"Show more..."}
+                </dd>
+              </div>
+            )}
           </dl>
         </div>
       </li>
