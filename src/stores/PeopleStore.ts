@@ -1,4 +1,4 @@
-import { action, observable, runInAction } from "mobx";
+import { action, makeObservable, observable, runInAction } from "mobx";
 import { RootStore } from "./RootStore";
 
 export type Person = {
@@ -21,7 +21,7 @@ export type Person = {
 };
 
 export class PeopleStore {
-  @observable public readonly peopleInfo: {
+  @observable readonly peopleInfo: {
     people: Person[];
     hasMore: null | string;
   } = observable.object({
@@ -29,14 +29,16 @@ export class PeopleStore {
     hasMore: null,
   });
 
-  constructor(private readonly rootStore: RootStore) {}
+  constructor(private readonly rootStore: RootStore) {
+    makeObservable(this);
+  }
 
   private resolveFilmTitle(link: string): string {
     const titles = this.rootStore.filmStore.filmTitles;
     const splits: string[] = link.split("/");
     const episodeNb = parseInt(splits[5]);
 
-    return titles[episodeNb];
+    return titles[episodeNb - 1];
   }
 
   @action async fetchPeople(): Promise<void> {
@@ -46,11 +48,14 @@ export class PeopleStore {
       if (query.ok) {
         const res = await query.json();
         return runInAction(() => {
-          for (let film of res.films) {
-            film = this.resolveFilmTitle(film);
+          for (const person of res.results) {
+            for (let film of person.films) {
+              film = this.resolveFilmTitle(film);
+            }
           }
 
-          this.peopleInfo.people = res;
+          this.peopleInfo.hasMore = res.next;
+          this.peopleInfo.people.push(...res.results);
         });
       } else {
         const res = await query.json();
@@ -59,5 +64,10 @@ export class PeopleStore {
     } catch (error) {
       throw error;
     }
+  }
+
+  @action async fetchAll(): Promise<void> {
+    await this.rootStore.filmStore.fetchFilmTitles();
+    await this.fetchPeople();
   }
 }
