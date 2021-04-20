@@ -1,9 +1,10 @@
+import { useRootStore } from "./stores/RootStore";
+
 const App = () => {
-  return (
-    <div className="App">
-      <p>Hello world</p>
-    </div>
-  );
+  const rootStore = useRootStore();
+
+  console.log(rootStore.peopleStore.fetchPeople());
+  return <p>Hello world</p>;
 };
 
 export default App;
