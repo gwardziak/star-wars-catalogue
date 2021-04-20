@@ -3,3 +3,13 @@
 @tailwind components;
 
 @tailwind utilities;
+
+@layer base {
+  html {
+    overflow: hidden;
+    height: 100%;
+  }
+  body {
+    height: 100%;
+  }
+}
