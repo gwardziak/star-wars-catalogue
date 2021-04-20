@@ -15,25 +15,25 @@ export const Character = ({ name, gender, birthYear }: CharacterProps) => {
             <div>
               <dt className="sr-only">Name</dt>
               <dd className="group-hover:text-light-blue-200 leading-6 font-medium text-black">
-                {name}
+                {`Name: ${name}`}
               </dd>
             </div>
             <div>
               <dt className="sr-only">Gender</dt>
               <dd className="group-hover:text-light-blue-200 text-sm font-medium ">
-                {gender}
+                {`Gender: ${gender}`}
               </dd>
             </div>
             <div>
               <dt className="sr-only">Birth year</dt>
               <dd className="group-hover:text-light-blue-200 text-sm font-medium mb-4">
-                {birthYear}
+                {`Birth year: ${birthYear}`}
               </dd>
             </div>
             <div>
               <dt className="sr-only">Show more</dt>
               <dd className="group-hover:text-light-blue-200 text-sm font-medium">
-                {"Show"}
+                {"Show more..."}
               </dd>
             </div>
           </dl>

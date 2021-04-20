@@ -47,6 +47,15 @@ const App = observer(() => {
           />
         ))}
       </ul>
+      {rootStore.peopleStore.peopleInfo.hasMore ? (
+        <button
+          onClick={() => {
+            rootStore.peopleStore.fetchPeople();
+          }}
+        >
+          add more
+        </button>
+      ) : null}
     </section>
   );
 });

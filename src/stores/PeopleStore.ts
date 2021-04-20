@@ -26,7 +26,7 @@ export class PeopleStore {
     hasMore: null | string;
   } = observable.object({
     people: [],
-    hasMore: null,
+    hasMore: "https://swapi.dev/api/people/?take=10&page=1",
   });
 
   constructor(private readonly rootStore: RootStore) {
@@ -42,8 +42,14 @@ export class PeopleStore {
   }
 
   @action async fetchPeople(): Promise<void> {
+    const url = this.peopleInfo.hasMore;
+
+    if (!url) {
+      return;
+    }
+
     try {
-      const query = await fetch("https://swapi.dev/api/people/?take=10&page=1");
+      const query = await fetch(url);
 
       if (query.ok) {
         const res = await query.json();
@@ -59,6 +65,7 @@ export class PeopleStore {
         });
       } else {
         const res = await query.json();
+
         throw new Error(`Error ${query.status} ${res.detail}`);
       }
     } catch (error) {
