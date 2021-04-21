@@ -67,11 +67,21 @@ const App = observer(() => {
                 />
               ))}
           {(isFetching ||
-            rootStore.peopleStore.peopleInfo.people.length === 0) && (
+            (rootStore.peopleStore.peopleInfo.people.length === 0 &&
+              !rootStore.peopleStore.responsError &&
+              !rootStore.filmStore.responsError)) && (
             <li className="grid justify-self-center">
               <Loader type={"Oval"} color={"#00BFFF"} />
             </li>
           )}
+
+          {rootStore.peopleStore.responsError ||
+          rootStore.filmStore.responsError ? (
+            <li className="grid justify-self-center font-medium text-red-600">
+              {rootStore.filmStore.responsError ??
+                rootStore.peopleStore.responsError}
+            </li>
+          ) : null}
         </ul>
       </section>
     </Scrollbar>

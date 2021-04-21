@@ -39,10 +39,11 @@ export class PeopleStore {
     hasMore: null | string;
   } = observable.object({
     people: [],
-    hasMore: "https://swapi.dev/api/people/?take=10&page=11",
+    hasMore: "https://swapi.dev/api/people/?page=1",
   });
 
   @observable filter: string = "";
+  @observable responsError: string | null = null;
 
   constructor(private readonly rootStore: RootStore) {
     makeObservable(this);
@@ -80,6 +81,11 @@ export class PeopleStore {
 
   @action async fetchPeople(): Promise<void> {
     const url = this.peopleInfo.hasMore;
+    const films = this.rootStore.filmStore.filmTitles;
+
+    if (films.length === 0) {
+      return;
+    }
 
     if (!url) {
       return;
@@ -104,12 +110,14 @@ export class PeopleStore {
           this.peopleInfo.people.push(...response.results);
         });
       } else {
-        const response = await query.json();
-
-        throw new Error(`Error ${query.status} ${response.detail}`);
+        throw new Error(`Error ${query.status}`);
       }
     } catch (error) {
-      throw error;
+      return runInAction(() => {
+        this.responsError = error.message;
+        this.peopleInfo.hasMore = null;
+        console.log(error, "network error during fetching characters");
+      });
     }
   }
 

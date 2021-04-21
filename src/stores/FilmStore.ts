@@ -1,4 +1,4 @@
-import { action, observable, runInAction } from "mobx";
+import { action, makeObservable, observable, runInAction } from "mobx";
 import { RootStore } from "./RootStore";
 
 export type FilmApiResponse = {
@@ -28,7 +28,11 @@ export type Film = {
 export class FilmStore {
   @observable filmTitles: string[] = observable.array([]);
 
-  constructor(private readonly rootStore: RootStore) {}
+  @observable responsError: string | null = null;
+
+  constructor(private readonly rootStore: RootStore) {
+    makeObservable(this);
+  }
 
   @action async fetchFilmTitles(): Promise<void> {
     try {
@@ -42,11 +46,13 @@ export class FilmStore {
           }
         });
       } else {
-        const response = await query.json();
-        throw new Error(`Error ${query.status} ${response.detail}`);
+        throw new Error(`Error ${query.status}`);
       }
     } catch (error) {
-      throw error;
+      return runInAction(() => {
+        this.responsError = error.message;
+        console.log(error, "network error during fetching films");
+      });
     }
   }
 }
