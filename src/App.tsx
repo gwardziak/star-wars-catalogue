@@ -4,7 +4,6 @@ import Loader from "react-loader-spinner";
 import "react-loader-spinner/dist/loader/css/react-spinner-loader.css";
 import { Scrollbar } from "react-scrollbars-custom";
 import { ScrollState } from "react-scrollbars-custom/dist/types/types";
-import "./assets/main.css";
 import { Character } from "./components/Character";
 import { SearchBar } from "./components/SearchBar";
 import { useRootStore } from "./stores/RootStore";

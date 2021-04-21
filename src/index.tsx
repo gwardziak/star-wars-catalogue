@@ -1,6 +1,7 @@
 import React, { createContext } from "react";
 import ReactDOM from "react-dom";
 import App from "./App";
+import "./assets/main.css";
 import { RootStore } from "./stores/RootStore";
 
 export const StoreContext = createContext<RootStore>(new RootStore());
