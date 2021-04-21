@@ -7,6 +7,13 @@ import {
 } from "mobx";
 import { RootStore } from "./RootStore";
 
+export type PersonApiResponse = {
+  count: number;
+  next: null | string;
+  previous: null | string;
+  results: Person[];
+};
+
 export type Person = {
   name: string;
   height: string;
@@ -32,7 +39,7 @@ export class PeopleStore {
     hasMore: null | string;
   } = observable.object({
     people: [],
-    hasMore: "https://swapi.dev/api/people/?take=10&page=1",
+    hasMore: "https://swapi.dev/api/people/?take=10&page=11",
   });
 
   @observable filter: string = "";
@@ -82,9 +89,9 @@ export class PeopleStore {
       const query = await fetch(url);
 
       if (query.ok) {
-        const res = await query.json();
+        const response: PersonApiResponse = await query.json();
         return runInAction(() => {
-          for (const person of res.results) {
+          for (const person of response.results) {
             const resolvedFilms = [];
             for (let film of person.films) {
               resolvedFilms.push(this.resolveFilmTitle(film));
@@ -93,13 +100,13 @@ export class PeopleStore {
             person.films = resolvedFilms;
           }
 
-          this.peopleInfo.hasMore = res.next;
-          this.peopleInfo.people.push(...res.results);
+          this.peopleInfo.hasMore = response.next;
+          this.peopleInfo.people.push(...response.results);
         });
       } else {
-        const res = await query.json();
+        const response = await query.json();
 
-        throw new Error(`Error ${query.status} ${res.detail}`);
+        throw new Error(`Error ${query.status} ${response.detail}`);
       }
     } catch (error) {
       throw error;

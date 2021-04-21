@@ -1,6 +1,13 @@
 import { action, observable, runInAction } from "mobx";
 import { RootStore } from "./RootStore";
 
+export type FilmApiResponse = {
+  count: number;
+  next: null | string;
+  previous: null | string;
+  results: Film[];
+};
+
 export type Film = {
   title: string;
   episode_id: number;
@@ -28,15 +35,15 @@ export class FilmStore {
       const query = await fetch("https://swapi.dev/api/films/");
 
       if (query.ok) {
-        const res = await query.json();
+        const response: FilmApiResponse = await query.json();
         return runInAction(() => {
-          for (const film of res.results) {
+          for (const film of response.results) {
             this.filmTitles.push(film.title);
           }
         });
       } else {
-        const res = await query.json();
-        throw new Error(`Error ${query.status} ${res.detail}`);
+        const response = await query.json();
+        throw new Error(`Error ${query.status} ${response.detail}`);
       }
     } catch (error) {
       throw error;

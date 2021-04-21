@@ -1,5 +1,7 @@
 import { observer } from "mobx-react-lite";
 import React, { useEffect, useState } from "react";
+import Loader from "react-loader-spinner";
+import "react-loader-spinner/dist/loader/css/react-spinner-loader.css";
 import { Scrollbar } from "react-scrollbars-custom";
 import { ScrollState } from "react-scrollbars-custom/dist/types/types";
 import "./assets/main.css";
@@ -44,8 +46,9 @@ const App = observer(() => {
 
         <ul className="grid grid-cols-1 sm:grid-cols-1 lg:grid-cols-1 xl:grid-cols-1 gap-4 mb-4">
           {rootStore.peopleStore.filter !== ""
-            ? rootStore.peopleStore.filterByName.map((person) => (
+            ? rootStore.peopleStore.filterByName.map((person, i) => (
                 <Character
+                  key={i}
                   name={person.name}
                   birthYear={person.birth_year}
                   gender={person.gender}
@@ -53,8 +56,9 @@ const App = observer(() => {
                   height={person.height}
                 />
               ))
-            : rootStore.peopleStore.peopleInfo.people.map((person) => (
+            : rootStore.peopleStore.peopleInfo.people.map((person, i) => (
                 <Character
+                  key={i}
                   name={person.name}
                   birthYear={person.birth_year}
                   gender={person.gender}
@@ -62,6 +66,12 @@ const App = observer(() => {
                   height={person.height}
                 />
               ))}
+          {(isFetching ||
+            rootStore.peopleStore.peopleInfo.people.length === 0) && (
+            <li className="grid justify-self-center">
+              <Loader type={"Oval"} color={"#00BFFF"} />
+            </li>
+          )}
         </ul>
       </section>
     </Scrollbar>
